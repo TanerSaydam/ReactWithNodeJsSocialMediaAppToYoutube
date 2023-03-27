@@ -1,14 +1,17 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
+import apiUrl from '../env';
 
 function Home() {
     const [content,setContent] = useState("");
+    const [posts, setPosts] = useState([]);
 
     const addPost = (e) =>{
         e.preventDefault();
         const user =JSON.parse(localStorage.getItem("user"));
-        axios.post("http://localhost:5000/api/post",{userId: user._id, content: content})
-            .then(res=> {
+        axios.post(apiUrl + "/api/post",{userId: user._id, content: content})
+            .then(async (res)=> {
+                await getPosts();
                 alert(res.data.message);
                 setContent("");
             })
@@ -16,6 +19,17 @@ function Home() {
                 console.log(err.data);
             });
     }
+
+    const getPosts = async () => {
+        axios.get(apiUrl + "/api/posts")
+        .then(res=> {
+            setPosts(res.data);
+        });
+    }
+
+    useEffect(()=> {
+        getPosts();
+    }, [])
 
     return (
         <div className="d-flex justify-content-center mt-4">
@@ -34,19 +48,19 @@ function Home() {
                     </div>
                 </div>
                 <hr />
-                <div className="card mt-2">
-                    <div className="card-body">
-                        <h5>Taner Saydam - 27.03.2023 21:51</h5>
-                        <p>asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd asdasdasdasdasdasdasdasd</p>
-                    </div>
-                </div>
-
-                <div className="card mt-2">
-                    <div className="card-body">
-                        <h5>Taner Saydam - 27.03.2023 21:51</h5>
-                        <p>asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd asdasdasdasdasdasdasdasd</p>
-                    </div>
-                </div>
+                {
+                    posts.map((val,index)=>{
+                        return(
+                            <div key={index} className="card mt-2">
+                                <div className="card-body">
+                                    <img src={apiUrl + '/' + val.users[0].avatar.path} style={{width: "50px", borderRadius: "50px", height: "60px"}}/>
+                                    <h5>{val.users[0].name} - {val.createdDate}</h5>
+                                    <p>{val.content}</p>
+                                </div>
+                            </div> 
+                        )
+                    })
+                }                              
             </div>
         </div>
     )

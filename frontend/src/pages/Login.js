@@ -10,9 +10,9 @@ function Login(){
     const login = (e) =>{
         e.preventDefault();
         axios.post("http://localhost:5000/api/login",{email: email, password: password})
-        .then(res=> {
+        .then(res=> {            
             localStorage.setItem("token", res.data.token);
-            localStorage.setItem("user", res.data.user);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
             navigate("/")
         })
         .catch((err)=> {
