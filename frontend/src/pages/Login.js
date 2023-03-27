@@ -22,7 +22,7 @@ function Login(){
                         <form autoComplete="off" onSubmit={login}>
                             <div className="form-group">
                                 Email
-                                <input required email className="form-control"/>
+                                <input type="email" required email className="form-control"/>
                             </div>
                             <div className="form-group mt-2">
                                 Password
@@ -30,7 +30,7 @@ function Login(){
                             </div>
                             <div className="form-group mt-2">
                                 <button type="submit" className="btn btn-primary w-100">
-                                    Sign In
+                                    Login
                                 </button>
                             </div>
                         </form>
